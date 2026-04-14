@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bänziger Architekt HTL</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #f5f3f0;
+    --fg: #1a1a18;
+    --muted: #8a8680;
+    --accent: #c4a882;
+    --line: #d6d2cc;
+    --white: #fefdfb;
+  }
+
+  html { scroll-behavior: smooth; font-size: 16px; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.65;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5rem 3rem;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    transition: padding 0.4s ease;
+  }
+  nav.scrolled { padding: 1rem 3rem; }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem; font-weight: 400;
+    letter-spacing: 0.02em; color: var(--fg); text-decoration: none;
+  }
+  .logo span {
+    color: var(--muted); font-weight: 400; margin-left: 0.3em;
+    font-family: 'DM Sans', sans-serif; font-size: 0.75rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .nav-links { display: flex; gap: 2.5rem; }
+  .nav-links a {
+    text-decoration: none; color: var(--muted);
+    font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+    font-weight: 400; transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--fg); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: end;
+    padding: 0 3rem 5rem;
+    gap: 3rem;
+  }
+  .hero-text { max-width: 520px; padding-bottom: 1rem; }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.6rem, 5vw, 4.2rem);
+    font-weight: 400; line-height: 1.1;
+    margin-bottom: 1.5rem; letter-spacing: -0.02em;
+  }
+  .hero p { font-size: 1.05rem; color: var(--muted); max-width: 400px; }
+  .hero-image {
+    width: 100%; height: 70vh; min-height: 400px;
+    overflow: hidden; position: relative;
+  }
+  .hero-image img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(15%);
+  }
+  .hero-image .img-caption {
+    position: absolute; bottom: 1rem; left: 1rem;
+    font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(255,255,255,0.7); background: rgba(0,0,0,0.3);
+    padding: 0.3rem 0.7rem; backdrop-filter: blur(4px);
+  }
+
+  /* SECTIONS */
+  section { padding: 6rem 3rem; }
+  .section-label {
+    font-size: 0.7rem; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 3rem; padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* FEATURED ROW */
+  .featured-row {
+    display: grid; grid-template-columns: 1.3fr 1fr;
+    gap: 3rem; margin-bottom: 4rem;
+  }
+  .featured-img { width: 100%; aspect-ratio: 16/10; overflow: hidden; }
+  .featured-img img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(15%); transition: filter 0.5s;
+  }
+  .featured-img:hover img { filter: grayscale(0%); }
+  .featured-text { display: flex; flex-direction: column; justify-content: center; }
+  .featured-text .year {
+    font-size: 0.7rem; color: var(--accent);
+    letter-spacing: 0.1em; margin-bottom: 0.6rem; font-weight: 500;
+  }
+  .featured-text h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 400; line-height: 1.25; margin-bottom: 1rem;
+  }
+  .featured-text p { color: var(--muted); font-size: 0.95rem; max-width: 380px; }
+  .featured-text a {
+    display: inline-block; margin-top: 1.5rem;
+    font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--fg); text-decoration: none;
+    padding-bottom: 2px; border-bottom: 1px solid var(--fg);
+    transition: border-color 0.3s, color 0.3s;
+  }
+  .featured-text a:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* PROJEKTE GRID */
+  .projekte-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px; background: var(--line); border: 1px solid var(--line);
+  }
+  .projekt-card {
+    background: var(--bg); display: flex; flex-direction: column;
+    text-decoration: none; color: var(--fg);
+    overflow: hidden; transition: background 0.4s ease;
+  }
+  .projekt-card:hover { background: var(--white); }
+  .projekt-card .card-img { width: 100%; aspect-ratio: 4/3; overflow: hidden; }
+  .projekt-card .card-img img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.6s ease, filter 0.6s ease;
+    filter: grayscale(20%);
+  }
+  .projekt-card:hover .card-img img { transform: scale(1.04); filter: grayscale(0%); }
+  .projekt-card .card-info {
+    padding: 1.4rem 1.5rem 1.6rem;
+    display: flex; justify-content: space-between; align-items: flex-end;
+  }
+  .projekt-card .year {
+    font-size: 0.7rem; color: var(--accent);
+    letter-spacing: 0.05em; margin-bottom: 0.4rem; font-weight: 500;
+  }
+  .projekt-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; font-weight: 400; line-height: 1.3;
+  }
+  .projekt-card .arrow {
+    font-size: 1.1rem; color: var(--muted);
+    transition: transform 0.3s, color 0.3s; flex-shrink: 0; margin-left: 1rem;
+  }
+  .projekt-card:hover .arrow { transform: translate(3px, -3px); color: var(--fg); }
+
+  /* ÜBER MICH */
+  .ueber-grid {
+    display: grid; grid-template-columns: 1fr 1.2fr;
+    gap: 4rem; align-items: start;
+  }
+  .portrait-frame { aspect-ratio: 1; background: var(--line); overflow: hidden; }
+  .portrait-frame img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(30%); transition: filter 0.5s;
+  }
+  .portrait-frame:hover img { filter: grayscale(0%); }
+  .bio h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem; font-weight: 400; margin-bottom: 1rem; line-height: 1.2;
+  }
+  .bio > p { color: var(--muted); margin-bottom: 2rem; }
+  .timeline-item {
+    display: grid; grid-template-columns: 110px 1fr;
+    gap: 1.5rem; padding: 0.7rem 0;
+    border-bottom: 1px solid var(--line); font-size: 0.9rem;
+  }
+  .timeline-item .period { color: var(--accent); font-weight: 500; font-size: 0.8rem; }
+  .timeline-item .desc { color: var(--muted); }
+
+  /* KONTAKT */
+  .kontakt-section { background: var(--fg); color: var(--white); }
+  .kontakt-section .section-label { color: rgba(255,255,255,0.35); border-color: rgba(255,255,255,0.12); }
+  .kontakt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+  .kontakt-grid h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem; font-weight: 400; line-height: 1.3; color: var(--white);
+  }
+  .kontakt-info { display: flex; flex-direction: column; gap: 1.5rem; }
+  .kontakt-info .label {
+    font-size: 0.7rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 0.3rem;
+  }
+  .kontakt-info .value { font-size: 1rem; color: rgba(255,255,255,0.8); }
+  .kontakt-info a { color: var(--accent); text-decoration: none; transition: opacity 0.3s; }
+  .kontakt-info a:hover { opacity: 0.7; }
+
+  footer {
+    padding: 1.5rem 3rem; background: var(--fg);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex; justify-content: space-between;
+    font-size: 0.75rem; color: rgba(255,255,255,0.25);
+  }
+
+  /* ANIMATIONS */
+  .fade-up {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  /* MOBILE */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 7rem; }
+    .hero-image { height: 50vh; }
+    .projekte-grid { grid-template-columns: 1fr 1fr; }
+    .featured-row { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .hero { padding: 6rem 1.5rem 3rem; gap: 2rem; }
+    section { padding: 4rem 1.5rem; }
+    .ueber-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .portrait-frame { max-width: 300px; }
+    .kontakt-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .projekte-grid { grid-template-columns: 1fr; }
+    footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
+  }
+  .hamburger { display: none; }
+  @media (max-width: 520px) {
+    .nav-links { display: none; }
+    .hamburger {
+      display: block; background: none; border: none; cursor: pointer; padding: 0;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 1.5px;
+      background: var(--fg); margin: 5px 0; transition: 0.3s;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo">Bänziger <span>Architekt HTL</span></a>
+  <div class="nav-links" id="navLinks">
+    <a href="#bauten">Bauten</a>
+    <a href="#ueber">Über mich</a>
+    <a href="#kontakt">Kontakt</a>
+  </div>
+  <button class="hamburger" onclick="let n=document.getElementById('navLinks');n.style.display=n.style.display==='flex'?'none':'flex'">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text fade-up">
+    <h1>Architektur<br>mit Sorgfalt.</h1>
+    <p>Neubauten, Umbauten und Anbauten im Appenzellerland und der Region Rheintal – sorgfältig geplant, ehrlich gebaut.</p>
+  </div>
+  <div class="hero-image fade-up">
+    <img src="https://images.squarespace-cdn.com/content/v1/5baa399f11f78463dbd82fac/1698573671805-LGVX308QJU0C6BIGNC7H/_DSC03093_X_BB.jpg" alt="Kirchgemeindehaus Thal">
+    <div class="img-caption">Kirchgemeindehaus Thal – 2018</div>
+  </div>
+</section>
+
+<!-- BAUTEN -->
+<section id="bauten">
+  <div class="section-label fade-up">Ausgewählte Projekte</div>
+
+  <!-- Featured -->
+  <div class="featured-row fade-up">
+    <div class="featured-img">
+      <img src="https://images.squarespace-cdn.com/content/v1/5baa399f11f78463dbd82fac/1612430628904-0JH8O7UW37WIM595M2R3/DSC00799_BB.jpg" alt="Pfarrhaus Thal" loading="lazy">
+    </div>
+    <div class="featured-text">
+      <div class="year">2020</div>
+      <h3>Umbau Evang.<br>Pfarrhaus Thal</h3>
+      <p>Behutsame Erneuerung eines historischen Pfarrhauses – mit Respekt vor der Substanz und Blick für zeitgemässes Wohnen.</p>
+      <a href="https://www.baenziger-architekt.ch/umbau-pfarrhaus-2020">Projekt ansehen ↗</a>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div class="projekte-grid fade-up">
+    <a class="projekt-card" href="https://www.baenziger-architekt.ch/umbau-pausenhalle-2022">
+      <div class="card-img"><img src="https://images.squarespace-cdn.com/content/v1/5baa399f11f78463dbd82fac/1698066776350-3W4O0ANNN57ZD24AR7IW/_IMG_0337_X_BB.jpg" alt="Pausenhalle" loading="lazy"></div>
+      <div class="card-info"><div><div class="year">2022</div><h3>Umbau Pausenhalle</h3></div><div class="arrow">↗</div></div>
+    </a>
+    <a class="projekt-card" href="https://www.baenziger-architekt.ch/neubau-wohnhaus-2021">
+      <div class="card-img"><img src="https://images.squarespace-cdn.com/content/v1/5baa399f11f78463dbd82fac/23880af3-5f65-4b6b-9864-39f32d8c6d56/_2103_Perspektive1_210615_BB.jpg" alt="Neubau Wohnhaus" loading="lazy"></div>
+      <div class="card-info"><div><div class="year">2021</div><h3>Neubau Wohnhaus</h3></div><div class="arrow">↗</div></div>
+    </a>
+    <a class="projekt-card" href="https://www.baenziger-architekt.ch/anbau-rheineck-2019">
+      <div class="card-img"><img src="https://images.squarespace-cdn.com/content/v1/5baa399f11f78463dbd82fac/1598444668848-KYL34TQN3LWYZEFH0MQ2/Web_IMG_6717_BB.jpg" alt="Anbau Rheineck" loading="lazy"></div>
+      <div class="card-info"><div><div class="year">2019</div><h3>Anbau Wohnhaus, Rheineck</h3></div><div class="arrow">↗</div></div>
+    </a>
+    <a class="projekt-card" href="https://www.baenziger-architekt.ch/neubau-kirchgemeinde-2018">
+      <div class="card-img"><img src="https://images.squarespace-cdn.com/content/v1/5baa399f11f78463dbd82fac/1698573671343-I4HPP7XRGSCP8N2WEV47/_DSC03078_BB.jpg" alt="Kirchgemeinde" loading="lazy"></div>
+      <div class="card-info"><div><div class="year">2018</div><h3>Neubau Kirchgemeinde</h3></div><div class="arrow">↗</div></div>
+    </a>
+    <a class="projekt-card" href="https://www.baenziger-architekt.ch/gestaltung-dorfzentrum-2017">
+      <div class="card-img"><img src="https://images.squarespace-cdn.com/content/v1/5baa399f11f78463dbd82fac/1612273011419-1SN7Z2Y9V6F6CU23M717/IMG_3085_BB.jpg" alt="Dorfzentrum Au" loading="lazy"></div>
+      <div class="card-info"><div><div class="year">2017</div><h3>Gestaltung Dorfzentrum</h3></div><div class="arrow">↗</div></div>
+    </a>
+    <a class="projekt-card" href="https://www.baenziger-architekt.ch/umbau-rathaus-2017">
+      <div class="card-img"><img src="https://images.squarespace-cdn.com/content/v1/5baa399f11f78463dbd82fac/1612336918043-CG1W81RHO3F176G2AMIU/DSC00825_BB.jpg" alt="Pfarrhaus Interior" loading="lazy"></div>
+      <div class="card-info"><div><div class="year">2017</div><h3>Umbau Rathaus</h3></div><div class="arrow">↗</div></div>
+    </a>
+  </div>
+</section>
+
+<!-- ÜBER MICH -->
+<section id="ueber">
+  <div class="section-label fade-up">Über mich</div>
+  <div class="ueber-grid fade-up">
+    <div class="portrait-frame">
+      <img src="https://images.squarespace-cdn.com/content/v1/5baa399f11f78463dbd82fac/1612357299200-EL2P1NFPZZL1411U4603/DSC01025_BB_quadratisch.jpg" alt="Mario Bänziger" loading="lazy">
+    </div>
+    <div class="bio">
+      <h2>Mario Bänziger</h2>
+      <p>Geboren 1975 in St. Gallen. Seit 2016 selbständig tätig als Architekt – mit über 20 Jahren Erfahrung in Entwurf, Planung und Realisierung.</p>
+      <div class="timeline">
+        <div class="timeline-item"><span class="period">Seit 2016</span><span class="desc">Selbständiger Architekt, Au SG</span></div>
+        <div class="timeline-item"><span class="period">2013 – 2016</span><span class="desc">Werner Schluchter Architekt HTL, Rheineck</span></div>
+        <div class="timeline-item"><span class="period">2005 – 2013</span><span class="desc">Ueli Sonderegger Architekt ETH SIA, Heiden</span></div>
+        <div class="timeline-item"><span class="period">2002 – 2004</span><span class="desc">Benz+Engeler Architekten BSA SIA, St. Gallen</span></div>
+        <div class="timeline-item"><span class="period">1997 – 2002</span><span class="desc">Lanter+Olbrecht AG Architekten FH, Rorschach</span></div>
+        <div class="timeline-item"><span class="period">1996 – 1999</span><span class="desc">Architekturstudium HTL St. Gallen</span></div>
+        <div class="timeline-item"><span class="period">1991 – 1995</span><span class="desc">Lehre als Hochbauzeichner, RLC Architekten AG</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KONTAKT -->
+<section id="kontakt" class="kontakt-section">
+  <div class="section-label fade-up">Kontakt</div>
+  <div class="kontakt-grid fade-up">
+    <h2>Haben Sie ein<br>Bauprojekt? Lassen<br>Sie uns sprechen.</h2>
+    <div class="kontakt-info">
+      <div><div class="label">Telefon</div><div class="value"><a href="tel:+41715713740">071 571 37 40</a></div></div>
+      <div><div class="label">E-Mail</div><div class="value"><a href="mailto:mario.baenziger@bluewin.ch">mario.baenziger@bluewin.ch</a></div></div>
+      <div><div class="label">Büro</div><div class="value">Feldstrasse 15<br>9434 Au SG</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Bänziger Architekt HTL</span>
+  <span>Feldstrasse 15, 9434 Au</span>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60));
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
